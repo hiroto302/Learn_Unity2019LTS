@@ -16,13 +16,14 @@ public class Player_a : MonoBehaviour, IReceivedDamage, IAttack
     // 攻撃処理
     public void Attack(int attackPower)
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButton(0))
         {
             // Rayをマウスで押した所に飛ばす
             Ray rayOrigin = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.DrawRay(rayOrigin.origin, rayOrigin.direction, Color.green);
             // Raycatによる情報を格納
             RaycastHit hitInfo;
-            if(Physics.Raycast(rayOrigin, out hitInfo))
+            if(Physics.Raycast(rayOrigin, out hitInfo, 100))
             {
                 // // Interface で機能を管理することで、ダメージを与えることができる敵が多様化しても、対応することができる
                 IReceivedDamage obj = hitInfo.collider.GetComponent<IReceivedDamage>();
