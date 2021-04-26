@@ -5,8 +5,12 @@ using System;
 
 public class Action : MonoBehaviour
 {
+    // 引数あり Action
     public Action<int, int> sum;
     public Action<int, int> sum2;
+
+    // 引数なし Action
+    public Action onGetName;
 
     void Start()
     {
@@ -22,11 +26,21 @@ public class Action : MonoBehaviour
             var total = a +b;
             Debug.Log("Sum2 : " + total);
         };
+
+        // 引数なしの Action を Lambda を利用して宣言する方法 エラーで、ActionはDelegateType ではないとでる,なぜ？
+        // onGetName = () => Debug.Log("GameObjectName = " + this.gameObject.name);
+        // onGetName = OnGet;
+        // しばらくは 引数なしなら Delegate 普通に宣言してやろ
     }
     void CalculationSum(int a, int b)
     {
         var total = a + b;
         Debug.Log("Sum : " + total);
+    }
+
+    void OnGet()
+    {
+        // 引数なしメソッド
     }
 }
 
