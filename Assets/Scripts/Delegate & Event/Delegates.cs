@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;       // For Action &
 
-public class Delegate : MonoBehaviour
+public class Delegates : MonoBehaviour
 {
     // デリゲート宣言 void型 引数あり
     public delegate void ChangeColor(Color newColor);
