@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class Action : MonoBehaviour
+public class Actions : MonoBehaviour
 {
     // 引数あり Action
     public Action<int, int> sum;
@@ -28,19 +28,15 @@ public class Action : MonoBehaviour
         };
 
         // 引数なしの Action を Lambda を利用して宣言する方法 エラーで、ActionはDelegateType ではないとでる,なぜ？
-        // onGetName = () => Debug.Log("GameObjectName = " + this.gameObject.name);
-        // onGetName = OnGet;
-        // しばらくは 引数なしなら Delegate 普通に宣言してやろ
+        // クラス名を 「Action」にしてる！？
+        // クラス名をつける時は気をつけろよ!!!!!!
+        onGetName = () => Debug.Log("GameObjectName = " + this.gameObject.name);
+        onGetName();
     }
     void CalculationSum(int a, int b)
     {
         var total = a + b;
         Debug.Log("Sum : " + total);
-    }
-
-    void OnGet()
-    {
-        // 引数なしメソッド
     }
 }
 
