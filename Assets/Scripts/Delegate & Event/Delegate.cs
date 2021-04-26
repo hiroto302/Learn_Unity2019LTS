@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;       // For Action &
 
 public class Delegate : MonoBehaviour
 {
@@ -8,19 +9,30 @@ public class Delegate : MonoBehaviour
     public delegate void ChangeColor(Color newColor);
     public ChangeColor onColorChange;
 
+    // Action<引数, 引数, ...> : Void型 デリゲート・変数を同時に宣言する
+    public Action<Color> changeColor;
+
+
     // Delegate ReturnType
     public delegate int CharacterLength(string text);
     CharacterLength c1;
 
-    //
+    // Func<引数, 返り値> : ReturnType デリゲート・変数と同時に宣言する
+    public Func<string, int> c2;
 
     void Start()
     {
         onColorChange = UpdateColor; // 格納
         onColorChange(Color.green);  // 実行
 
+        changeColor = UpdateColor;
+        changeColor(Color.black);
+
         c1 = GetCharacters;
-        Debug.Log(c1("HIRO302") + " : CharacterLength");
+        Debug.Log(c1("HIRO302") + " : CharacterLength1");
+
+        c2 = GetCharacters;
+        Debug.Log(c2("HIRO") + " : CharacterLength2");
 
 
     }
