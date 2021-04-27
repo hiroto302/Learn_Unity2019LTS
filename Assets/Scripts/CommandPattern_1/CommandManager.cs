@@ -20,7 +20,7 @@ public class CommandManager : MonoSingletone<CommandManager>
     {
         StartCoroutine(PlayRoutine());
     }
-    // 色を巻き戻す
+    // 再生
     IEnumerator PlayRoutine()
     {
         Debug.Log("Playing...");
@@ -34,6 +34,7 @@ public class CommandManager : MonoSingletone<CommandManager>
 
     // Create a rewind routine triggered by a rewind method that's going to play in reverse
     // 1 second delay
+    // 巻き戻し再生
     public void Rewind()
     {
         StartCoroutine(RewindRoutine());
