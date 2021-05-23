@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: JonasanData
   m_EditorClassIdentifier: 
   _initialPlayerName: jonasan
-  Level: 80
-  PlayerName: Jonasan
-  _key: 
+  _initialPlayerLevel: 0
+  Level: 0
+  PlayerName: jonasan
+  _key: JonasanData

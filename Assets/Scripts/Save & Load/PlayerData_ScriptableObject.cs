@@ -2,8 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Play 実行中でも Editor, または PlayScene 上で パラメターが変更された時シリアライズ化(?)、Play 終了後も内容は保存されたままである
 // ビルドした後、テストプレイ中にSaveとLoadができるように実装する
+
+/* ビルドしたアプリでテストプレイ時の考察
+    Play 実行中でも Editor, または PlayScene 上で パラメターが変更された時シリアライズ化(?)、Play 終了後も内容は保存されたままである
+    ただし、ビルドしたアプリの場合は、更新されても初期化される。
+
+    今のSave とロード 機能の記述では、アプリを２つビルドした時、同名の key だと同じデータをを参照してしまっている。
+    おそらく、同名の プロダクトネーム・会社名 のままビルドしたために。別のSaveファイルが作成されていないと考えられる。
+    その通りだった。
+
+    PlayePrefs.Save(変更された値をディスクへと保存) の役割がわからないままである.
+    PlayerPrefs.SetString(key で識別される設定情報の値を設定)などで 変更した後に、
+    PlayerPrefs.Saveを行わなくても、変更内容を参照することは可能である。
+    デフォルトでは,OnApplicationQuit(). 自動的に呼ばれるため、明示的に記述することを推奨されていない。
+*/
+
 [CreateAssetMenu(fileName = "New PlayerData", menuName = "SaveData/PlayerData")]
 
 public class PlayerData_ScriptableObject : ScriptableObject
@@ -39,6 +53,8 @@ public class PlayerData_ScriptableObject : ScriptableObject
     void OnEnable()
     {
         Debug.Log("範囲内");
+        // ビルドしたアプリで、起動時に保存されてるDataを取得.
+        LoadPlayerData();
     }
 
     public void SaveCurrentPlayerData(string name, int level)
