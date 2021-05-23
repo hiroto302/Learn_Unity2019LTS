@@ -57,6 +57,7 @@ public class PlayerData_ScriptableObject : ScriptableObject
     // 保存されてる内容をロードする
     public void LoadPlayerData()
     {
+        // キーと対応するDataがないときは、何も上書きされることなく変化しない
         JsonUtility.FromJsonOverwrite(PlayerPrefs.GetString(_key), this);
         Debug.Log("ロード");
     }
@@ -81,6 +82,7 @@ public class PlayerData_ScriptableObject : ScriptableObject
     // 保存してあるデータ削除
     public void DeleteSavedData()
     {
+        // キーと対応しているデータ削除
         PlayerPrefs.DeleteKey(_key);
     }
 }
