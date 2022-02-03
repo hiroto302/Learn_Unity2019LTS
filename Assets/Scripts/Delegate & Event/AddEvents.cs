@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AddEvents : MonoBehaviour
 {
-    // even tを追加するクラス
+    // eventを追加するクラス
 
     void Start()
     {

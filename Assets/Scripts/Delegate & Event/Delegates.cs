@@ -17,7 +17,7 @@ public class Delegates : MonoBehaviour
     public delegate int CharacterLength(string text);
     CharacterLength c1;
 
-    // Func<引数, 返り値> : ReturnType デリゲート・変数と同時に宣言する
+    // Func<引数, 返り値> : ReturnType デリゲート・変数と同時に宣言する
     public Func<string, int> c2;
 
     void Start()
