@@ -16,8 +16,16 @@ public class Coroutine_Sample : MonoBehaviour
     void Start()
     {
         // StartCoroutine("FrameRoutine");
-        StartCoroutine(SecondRoutine());
+        // StartCoroutine(SecondRoutine());
+        StartCoroutine(CheckFuelRoutine());
     }
+
+    void Update()
+    {
+        fuel--;
+        Debug.Log(fuel + " : fuel");
+    }
+
 
 
     IEnumerator FrameRoutine()
@@ -49,5 +57,28 @@ public class Coroutine_Sample : MonoBehaviour
         yield return new WaitForSecondsRealtime(2.0f);
         Debug.Log("End WaitRealForSeconds(2.0f) : " + Time.realtimeSinceStartup);
     }
+
+    // Yield Return Wait Until / Wait While (デリゲートを待つ)
+    // Wait Untilはデリゲートがtrueと評価されるまで実行を一時停止し、Wait Whileはそれがfalseになるまで待ってから実行を開始。
+
+    int fuel = 10;
+    IEnumerator CheckFuelRoutine()
+    {
+        Debug.Log("Start CheckFuel Routine");
+        yield return new WaitUntil(IsEmpty);
+        Debug.Log("tank is Empty!");
+    }
+    bool IsEmpty()
+    {
+        if(fuel > 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
 }
 
