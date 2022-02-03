@@ -15,22 +15,27 @@ public class Coroutine_Sample : MonoBehaviour
 
     void Start()
     {
-        // StartCoroutine("FrameRoutine");
+        /* nameメソッドよりもstringメソッドを使用した方が若干パフォーマンスが上がるらしい。
+            ただし、文字列を使用してコルーチンを開始する場合、パラメータを1つだけ渡すことが可能 */
+
+        // 文字列でコルーチンを開始 (文字列実行する時、引数にデフォルト値を利用することを記述する方法があるのか探す.何も指定しないと引数を要求するエラーになる)
+        // StartCoroutine("FrameRoutine", 0);
+        // メソッド名を参照することでコルーチンを開始
+        // StartCoroutine(CheckFuelRoutine_2());
         // StartCoroutine(SecondRoutine());
-        StartCoroutine(CheckFuelRoutine_2());
         // Run();
     }
 
     void Update()
     {
-        fuel--;
+        // fuel--;
     }
 
 
-    IEnumerator FrameRoutine()
+    IEnumerator FrameRoutine(int n = 0)
     {
         Debug.Log("Start FrameRoutine : " + Time.time);
-        int i = 0;
+        int i = n;
         Debug.Log("Start i count");
         while(i < 10)
         {
