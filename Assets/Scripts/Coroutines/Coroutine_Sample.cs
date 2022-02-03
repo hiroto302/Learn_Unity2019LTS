@@ -17,15 +17,14 @@ public class Coroutine_Sample : MonoBehaviour
     {
         // StartCoroutine("FrameRoutine");
         // StartCoroutine(SecondRoutine());
-        StartCoroutine(CheckFuelRoutine());
+        StartCoroutine(CheckFuelRoutine_2());
+        // Run();
     }
 
     void Update()
     {
         fuel--;
-        Debug.Log(fuel + " : fuel");
     }
-
 
 
     IEnumerator FrameRoutine()
@@ -60,16 +59,36 @@ public class Coroutine_Sample : MonoBehaviour
 
     // Yield Return Wait Until / Wait While (デリゲートを待つ)
     // Wait Untilはデリゲートがtrueと評価されるまで実行を一時停止し、Wait Whileはそれがfalseになるまで待ってから実行を開始。
+    // 提供されたデリゲートは、MonoBehaviour.Updateの後、MonoBehaviour.LateUpdateの前に、各フレームで実行されることに注意。
+    int fuel = 5;
 
-    int fuel = 10;
+    Coroutine fuelCoroutine = null;
+
+    void Run()
+    {
+        fuelCoroutine = StartCoroutine(UseFuelRoutine());
+        StartCoroutine(CheckFuelRoutine());
+    }
+
+    IEnumerator UseFuelRoutine()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(1.0f);
+            fuel--;
+            Debug.Log(fuel + " fuel");
+        }
+    }
     IEnumerator CheckFuelRoutine()
     {
-        Debug.Log("Start CheckFuel Routine");
+        // false => true のとき実行
         yield return new WaitUntil(IsEmpty);
         Debug.Log("tank is Empty!");
+        StopCoroutine(fuelCoroutine);
     }
     bool IsEmpty()
     {
+        // Debug.Log("Fuel is Empty?");
         if(fuel > 0)
         {
             return false;
@@ -80,5 +99,14 @@ public class Coroutine_Sample : MonoBehaviour
         }
     }
 
+    // 上記のように条件を評価するために外部関数(IsEmpty) を使用しているが
+    // While Loopの代わりにWait UntilやWait Whileを使う利点は、利便性にある。ラムダ式を使うと、While Loopと同じように、1行のコードで変数の条件をチェックすることが可能
+    IEnumerator CheckFuelRoutine_2()
+    {
+        // true => false 時実行
+        yield return new WaitWhile(() => fuel > 0);
+        Debug.Log("tank is empty");
+        Debug.Log(fuel);
+    }
 }
 
