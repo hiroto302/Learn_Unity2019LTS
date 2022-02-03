@@ -193,5 +193,17 @@ public class Coroutine_Sample : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         Debug.Log("SecondRoutine All Done");
     }
+
+    /* Wait for Secondsの使用について
+        このようなWait for Secondsの使用は、1回限りの待ち時間に最適だが
+        繰り返し発生する遅延については、Wait for Seconds オブジェクトを先にキャッシュしておくほうが若干パフォーマンスが良くなる。
+        これは、new キーワードが必要ないことも意味する。
+    */
+    WaitForSeconds delayTime = new WaitForSeconds(1.0f);
+
+    IEnumerator FadeRoutine()
+    {
+        yield return delayTime;
+    }
 }
 
