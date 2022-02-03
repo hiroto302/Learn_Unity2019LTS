@@ -3,32 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-/*  コルーチンについて検証する
+/* コルーチンについて検証する
     コルーチンの戻り値の型 は IEnumerator : Unityプログラミングで用いられる非同期処理を行うために用いるデータ型の一種
     コルーチンでは yieldステートメント を使用して実行中のコードを一時停止
     関数を中断させたい地点で yield return というキーワードで始める
     Yield はメソッドが iterator (集合から次々に要素を抽出する行為を一般化したもの)であり、複数のフレームにわたって実行されることを示す。
     一方 return は通常の関数と同様、その時点で実行を終了し、呼び出し側のメソッドに制御を戻す。
 */
+
+/* コルーチンの開始方法について
+    nameメソッドよりもstringメソッドを使用した方が若干パフォーマンスが上がるらしい。
+    ただし、文字列を使用してコルーチンを開始する場合、パラメータを1つだけ渡すことが可能
+*/
+
+/* コルーチンの終了について
+    コルーチンは、そのコードが実行されると自動的に終了する。明示的にコルーチンを終了させる必要ない。
+    コルーチンが終了する前に手動で終了させたい場合などの時は yield break(内部で) または、StopCoroutine(外部から) を使用する
+    全てのコルーチンを停止したいときは、StopAllCoroutines()を使用。
+
+    Game Objectを破壊すると、コルーチンが停止するのか？
+    Game Objectを破壊または無効化すると、そこから呼び出されたコルーチンが、他のGame Object上の他のスクリプトにある場合でも終了する。
+    ただしこれは、ゲームオブジェクトレベルでしか機能しない。スクリプトを無効化するだけでは、コルーチンは停止しない。
+    また、あるオブジェクトのコルーチンが別のスクリプトによって呼び出された場合、そのオブジェクトを破壊しても、
+    コルーチンは呼び出したゲームオブジェクトと結びついているため、コルーチンを終了させることはできない。
+*/
+
+/* その他メモ
+    関数の開始を遅らせるだけならInvokeで、同じ関数を何度も繰り返すならInvoke Repeating でも対応できる。
+    まUnityではAsync関数やAwait関数を使用することも可能で、これらはコルーチンと似たような仕組みで動作する
+    Async関数やAwait関数とコルーチンの大きな違いは、一般的にコルーチンが値を返すことができないのに対して、Async関数やAwait関数は値を返すことができる点である。
+*/
+
+
 public class Coroutine_Sample : MonoBehaviour
 {
 
     void Start()
     {
-        /* nameメソッドよりもstringメソッドを使用した方が若干パフォーマンスが上がるらしい。
-            ただし、文字列を使用してコルーチンを開始する場合、パラメータを1つだけ渡すことが可能 */
-
         // 文字列でコルーチンを開始 (文字列実行する時、引数にデフォルト値を利用することを記述する方法があるのか探す.何も指定しないと引数を要求するエラーになる)
         // StartCoroutine("FrameRoutine", 0);
         // メソッド名を参照することでコルーチンを開始
         // StartCoroutine(CheckFuelRoutine_2());
         // StartCoroutine(SecondRoutine());
-        // Run();
+        StartCoroutine(BreakRoutine());
+        Run();
     }
 
     void Update()
     {
         // fuel--;
+
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            // 呼び出されたスクリプトによって開始されたすべてのコルーチンを停止する。他の場所で実行されている他のコルーチンに影響を与えない
+            StopAllCoroutines();
+        }
     }
 
 
@@ -67,6 +96,9 @@ public class Coroutine_Sample : MonoBehaviour
     // 提供されたデリゲートは、MonoBehaviour.Updateの後、MonoBehaviour.LateUpdateの前に、各フレームで実行されることに注意。
     int fuel = 5;
 
+    /*  コルーチンへの参照を保存
+        ある特定のコルーチンのインスタンスを停止させたい場合などに便利
+    */
     Coroutine fuelCoroutine = null;
 
     void Run()
@@ -89,7 +121,9 @@ public class Coroutine_Sample : MonoBehaviour
         // false => true のとき実行
         yield return new WaitUntil(IsEmpty);
         Debug.Log("tank is Empty!");
-        StopCoroutine(fuelCoroutine);
+
+        fuelCoroutine = null;
+        // StopCoroutine(fuelCoroutine);
     }
     bool IsEmpty()
     {
@@ -112,6 +146,22 @@ public class Coroutine_Sample : MonoBehaviour
         yield return new WaitWhile(() => fuel > 0);
         Debug.Log("tank is empty");
         Debug.Log(fuel);
+    }
+
+    IEnumerator BreakRoutine()
+    {
+        int i = 0;
+        while(true)
+        {
+            i++;
+            Debug.Log(i);
+            if(i > 3)
+            {
+                Debug.Log("途中終了");
+                yield break;
+            }
+            yield return null;
+        }
     }
 }
 
