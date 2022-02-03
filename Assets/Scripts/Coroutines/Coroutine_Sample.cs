@@ -44,9 +44,10 @@ public class Coroutine_Sample : MonoBehaviour
         // StartCoroutine("FrameRoutine", 0);
         // メソッド名を参照することでコルーチンを開始
         // StartCoroutine(CheckFuelRoutine_2());
-        // StartCoroutine(SecondRoutine());
-        StartCoroutine(BreakRoutine());
-        Run();
+        // StartCoroutine(CountRoutine());
+        // StartCoroutine(BreakRoutine());
+        // Run();
+        StartCoroutine(FirstRoutine());
     }
 
     void Update()
@@ -76,7 +77,7 @@ public class Coroutine_Sample : MonoBehaviour
         Debug.Log("End i count");
     }
 
-    IEnumerator SecondRoutine()
+    IEnumerator CountRoutine()
     {
         // timeScale が 1.0 のとき、時間は実時間と同じ速さ。timeScale が 0.5 の場合、時間は実時間の 2 倍の速度で経過
         // Time.time は timeSale に依存していることに注意
@@ -122,8 +123,9 @@ public class Coroutine_Sample : MonoBehaviour
         yield return new WaitUntil(IsEmpty);
         Debug.Log("tank is Empty!");
 
+        // 外部から 実行されている Coroutine を終了
+        StopCoroutine(fuelCoroutine);
         fuelCoroutine = null;
-        // StopCoroutine(fuelCoroutine);
     }
     bool IsEmpty()
     {
@@ -162,6 +164,34 @@ public class Coroutine_Sample : MonoBehaviour
             }
             yield return null;
         }
+    }
+
+    // Wait For End of Frame
+    // この命令は、Unity がすべてのカメラと UI エレメントをレンダリングするまで、実際にフレームを表示する前に待機します。典型的な使い方は、スクリーンショットを撮ること
+    IEnumerator TakePictureRoutine()
+    {
+        yield return new WaitForEndOfFrame();
+
+        // CaptureScreen();
+    }
+
+    /* Wait for another Coroutine
+        yield文のトリガーとなる別のコルーチンが実行を終了するまでyieldすることが可能。
+        yield returnの後にStart Coroutineメソッドを実行するように記述する。
+    */
+    IEnumerator FirstRoutine()
+    {
+        Debug.Log("FirstRoutine has started");
+        // 指定した Coroutine が終了するまで待機
+        yield return StartCoroutine(SecondRoutine());
+        // 終了後実行
+        yield return new WaitForSeconds(1.0f);
+        Debug.Log("FirstRoutine has ended");
+    }
+    IEnumerator SecondRoutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Debug.Log("SecondRoutine All Done");
     }
 }
 
