@@ -35,6 +35,7 @@ using UnityEngine;
 */
 
 
+
 public class Coroutine_Sample : MonoBehaviour
 {
 
@@ -48,6 +49,8 @@ public class Coroutine_Sample : MonoBehaviour
         // StartCoroutine(BreakRoutine());
         // Run();
         StartCoroutine(FirstRoutine());
+
+        Debug.Log("a");
     }
 
     void Update()
